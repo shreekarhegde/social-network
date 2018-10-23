@@ -57,7 +57,10 @@ const profileSchema = new Schema({
         type: String,
         required: true
     },
-    notifications: [ notificationSchema ]
+    notifications:  {
+        type: Schema.Types.ObjectId,
+        ref: 'Notifications'
+    }
 });
 
 profileSchema.pre('save', function (next) {

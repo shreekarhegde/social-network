@@ -35,23 +35,19 @@ router.post('/create_account', (req, res) => {
 });
 
 //add friend and make sure request is sent only once
-router.post('/send_request/:id', validateID, authenticateUser, (req, res) => { 
+router.post('/send_request/:id', validateID, authenticateUser, (req, res) => {
     let id = req.params.id;
     let username = req.locals.profile.username;
     userId = req.locals.profile._id;
-        Profile.findOneAndUpdate({ _id: id }, {
-            $push: {
-                notifications: 
-                 `you have a friend request from ${username}`
-            }
-        }).then((account) => {
-            res.send({
-                notice: `request sent to ${account.username}`
-            });
-            Profile.findOneAndUpdate({ username: username }, { $push: { activity: `you sent a friend request to ${account.username}` } }).catch((err) => {
-                res.send(err);
-            });
+    Profile.findOne({ _id: id }).populate('notifications.friendRequest').then((notifications) => {
+        notifications.friendRequests.push(`you have a friend request from ${username}`);
+        res.send({
+            notice: `request sent`
+        })
+        Profile.findOneAndUpdate({ username: username }, { $push: { activity: `you sent a friend request to ${account.username}` } }).catch((err) => {
+            res.send(err);
         });
+    });
 });
 
 //accept_request
