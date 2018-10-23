@@ -57,6 +57,7 @@ const profileSchema = new Schema({
         type: String,
         required: true
     },
+    //check for subdocument
     notifications: {
         type: Schema.Types.ObjectId,
         ref: 'Notifications'
