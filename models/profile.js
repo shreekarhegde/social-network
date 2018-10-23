@@ -58,10 +58,7 @@ const profileSchema = new Schema({
         required: true
     },
     //check for subdocument
-    notifications: {
-        type: Schema.Types.ObjectId,
-        ref: 'Notifications'
-    }
+    notifications:[]
 });
 
 profileSchema.pre('save', function (next) {
