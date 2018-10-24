@@ -40,19 +40,18 @@ router.post('/send_request/:id', validateID, authenticateUser, (req, res) => {
     let username = req.locals.profile.username;
     //TODO- limiting request to one
     userId = req.locals.profile._id;
-    Profile.findOne({ _id: id}).populate('notifications.friendRequests').then((user) => {
-         user.notifications[0].friendRequests.push({content:`you have a friend request from ${username}`});
-         let store = user.notifications[0];
-        Profile.update({_id: id}, { $push: {notifications: store}}).then((response) => {
-            res.send(response);
-        })
-        Profile.findOneAndUpdate({ username: username }, { $push: { activity: `you sent a friend request to ${account.username}` } }).catch((err) => {
-            res.send(err);
-        });
+    let friendRequests = {
+        content:`you have a friend request from ${username}`};
+    Profile.findOneAndUpdate({ _id: id}, {$push:{notifications: { friendRequests }}}).populate('notifications.friendRequests').then((user) =>{
+        res.send(user.notifications);
     }).catch((err) => {
         res.send(err);
     });
-});
+         
+        // Profile.findOneAndUpdate({ username: username }, { $push: { activity: `you sent a friend request to ${account.username}` } }).catch((err) => {
+        //     res.send(err);
+        // })
+    });
 
 //accept_request
 
