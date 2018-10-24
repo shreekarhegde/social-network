@@ -38,6 +38,7 @@ router.post('/create_account', (req, res) => {
 router.post('/send_request/:id', validateID, authenticateUser, (req, res) => {
     let id = req.params.id;
     let username = req.locals.profile.username;
+    //TODO- limiting request to one
     userId = req.locals.profile._id;
     Profile.findOne({ _id: id}).populate('notifications.friendRequests').then((user) => {
          user.notifications[0].friendRequests.push({content:`you have a friend request from ${username}`});
