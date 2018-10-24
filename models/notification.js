@@ -1,8 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const { Profile } = require('../models/profile');
 
 const notificationSchema = new Schema({
     friendRequests: [{
+        content:{
+            type: String
+        },
         isFriend: {
             type: Boolean,
             default: false
@@ -15,7 +19,7 @@ const notificationSchema = new Schema({
      }
 });
 
-const Notification = mongoose.model('notification', notificationSchema );
+const Notification = mongoose.model('Notification', notificationSchema );
 
 module.exports = {
     Notification, notificationSchema

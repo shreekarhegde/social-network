@@ -57,10 +57,7 @@ const profileSchema = new Schema({
         type: String,
         required: true
     },
-    notifications:  {
-        type: Schema.Types.ObjectId,
-        ref: 'Notifications'
-    }
+    notifications:  [ notificationSchema ]
 });
 
 profileSchema.pre('save', function (next) {
@@ -82,6 +79,7 @@ profileSchema.methods.generateToken = function (next) {
     profile.tokens.push({
         token
     });
+
 
     return profile.save().then(() => {
         return token;

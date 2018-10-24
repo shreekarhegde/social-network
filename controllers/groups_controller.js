@@ -21,10 +21,13 @@ router.post('/add_members/:id', authenticateUser, (req, res) => {
     let body = _.pick(req.body, ['groupname']);
     let group = new Group(body);
     Profile.findByIdAndUpdate(id).then((profile) =>{
+        profile.groups.push(profile.username);
+        // Profile.findOneAndUpdate({username: profile.username}, {$push: { groups: group.groupname}}  );
         Group.findOneAndUpdate({groupname: group.groupname}, {$push: { profiles: profile.username} }).then((member) => {
             res.send({
                 notice: 'successfully added to the group'
             });
+
         });
     }).catch((err) => {
         res.send(err);
