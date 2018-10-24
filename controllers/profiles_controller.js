@@ -42,15 +42,15 @@ router.post('/send_request/:id', validateID, authenticateUser, (req, res) => {
     userId = req.locals.profile._id;
     let friendRequests = {
         content:`you have a friend request from ${username}`};
-    Profile.findOneAndUpdate({ _id: id}, {$push:{notifications: { friendRequests }}}).populate('notifications.friendRequests').then((user) =>{
-        res.send(user.notifications);
+    Profile.findOneAndUpdate({ _id: id}, {$push:{notifications: { friendRequests }}}).then((user) =>{
+        Profile.findOneAndUpdate({ username: username }, { $push: { activity: `you sent a friend request to ${user.username}` } }).then((user) =>{
+            res.send(`request sent`);
+        })
     }).catch((err) => {
         res.send(err);
     });
          
-        // Profile.findOneAndUpdate({ username: username }, { $push: { activity: `you sent a friend request to ${account.username}` } }).catch((err) => {
-        //     res.send(err);
-        // })
+       
     });
 
 //accept_request
