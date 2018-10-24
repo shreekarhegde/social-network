@@ -83,7 +83,7 @@ profileSchema.methods.generateToken = function (next) {
 
     return profile.save().then(() => {
         return token;
-    })
+    });
 }
 
 

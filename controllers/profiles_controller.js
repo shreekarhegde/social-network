@@ -43,6 +43,7 @@ router.post('/send_request/:id', validateID, authenticateUser, (req, res) => {
     Profile.findOne({ _id: id}).populate('notifications.friendRequests').then((user) => {
          user.notifications[0].friendRequests.push({content:`you have a friend request from ${username}`});
          let store = user.notifications[0];
+         console.log(store);
         Profile.update({_id: id}, { $push: {notifications: store}}).then((response) => {
             res.send(response);
         })
