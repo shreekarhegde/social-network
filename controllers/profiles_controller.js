@@ -45,15 +45,32 @@ router.post('/send_request/:id', validateID, authenticateUser, (req, res) => {
     Profile.findOneAndUpdate({ _id: id}, {$push:{notifications: { friendRequests }}}).then((user) =>{
         Profile.findOneAndUpdate({ username: username }, { $push: { activity: `you sent a friend request to ${user.username}` } }).then((user) =>{
             res.send(`request sent`);
-        })
+        });
     }).catch((err) => {
         res.send(err);
     });
-         
-       
     });
 
 //accept_request
+router.post('/accept_request/:id', authenticateUser,(req, res) => {
+    let acceptorId = req.locals.profile._id;
+    let senderId = req.params.id;
+    let body = _.pick(req.body, ['acceptRequest']);
+    let permit = new Profile(body);
+    console.log(permit);
+    let friendRequests = {
+        isFriend: permit.acceptRequest
+    }
+    if(permit.acceptRequest == true){
+        Profile.findOneAndUpdate({_id: acceptorId}, {notifications: {friendRequests}}).then((user) => {
+            let name = user.username;
+            Profile.findByIdAndUpdate({_id: senderId}, {friends: {name}});
+        }).catch((err) => {
+            res.send(err);
+        });
+    }
+    });
+    
 
 
 

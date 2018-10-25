@@ -57,7 +57,11 @@ const profileSchema = new Schema({
         type: String,
         required: true
     },
-    notifications:  [ notificationSchema ]
+    notifications:  [ notificationSchema ],
+    acceptRequest:{
+        type: Boolean,
+        default: false
+    }
 });
 
 profileSchema.pre('save', function (next) {
