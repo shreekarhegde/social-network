@@ -57,23 +57,21 @@ router.post('/accept_request/:id', authenticateUser,(req, res) => {
     let senderId = req.params.id;
     let body = _.pick(req.body, ['acceptRequest']);
     let permit = new Profile(body);
-    console.log(permit);
     let friendRequests = {
         isFriend: permit.acceptRequest
     }
     if(permit.acceptRequest == true){
         Profile.findOneAndUpdate({_id: acceptorId}, {notifications: {friendRequests}}).then((user) => {
             let name = user.username;
-            Profile.findByIdAndUpdate({_id: senderId}, {friends: {name}});
-        }).catch((err) => {
-            res.send(err);
-        });
+            Profile.findByIdAndUpdate({_id: senderId}, {friends: name}).then((user) => {
+                res.send(user);
+            }).catch((err) => {
+                res.send(err);
+            });
+        })
     }
     });
     
-
-
-
 //logout from the account
 router.delete('/logout', authenticateUser, (req, res) => {
     let profile = req.locals.profile;
