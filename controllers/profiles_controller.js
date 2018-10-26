@@ -17,7 +17,7 @@ router.get('/friends_list', authenticateUser, (req, res) => {
 });
 
 //visit profile
-router.get('/:id', validateID, (req, res) => {
+router.get('/my_profile/:id', validateID, (req, res) => {
     let id = req.params.id;
     Profile.findById(id).then((account) => {
         res.send(account);
@@ -25,8 +25,6 @@ router.get('/:id', validateID, (req, res) => {
         res.send(err);
     });
 });
-
-
 
 //create account
 router.post('/create_account', (req, res) => {
@@ -87,7 +85,7 @@ router.post('/accept_request/:id', authenticateUser, (req, res) => {
                         res.send(`request accepted`);
                     }).catch((err) => {
                         res.send(err);
-                })
+                });
                 });
             });
         });
