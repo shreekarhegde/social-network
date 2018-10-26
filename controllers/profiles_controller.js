@@ -6,6 +6,15 @@ const _ = require('lodash');
 const { validateID } = require('../middlewares/utilities');
 const { authenticateUser } = require('../middlewares/authentication');
 
+//see friends list
+router.get('/friends_list', authenticateUser, (req, res) => {
+    let id = req.locals.profile._id;
+    Profile.findById(id).then((account) => {
+        res.send(account.friends);
+    }).catch((err) => {
+        res.send(err);
+    });
+});
 
 //visit profile
 router.get('/:id', validateID, (req, res) => {
@@ -16,6 +25,7 @@ router.get('/:id', validateID, (req, res) => {
         res.send(err);
     });
 });
+
 
 
 //create account
@@ -65,20 +75,25 @@ router.post('/accept_request/:id', authenticateUser, (req, res) => {
         isFriend: permit.acceptRequest
     }
     if (permit.acceptRequest == true) {
-        Profile.findByIdAndUpdate({ _id: senderId }, { notifications: { friendRequests }},{$push:{ friends: acceptorName }}).then((user) => {
-            let senderName = user.username;
-            let friendRequests = {
-                content: `you and ${senderName} are now friends`,
-                isFriend: permit.acceptRequest
-            }
-            Profile.findByIdAndUpdate({ _id: acceptorId }, { notifications: { friendRequests } },{$push:{ friends: senderName }}).then((user) => {
-                res.send(`request accepted`);
-            }).catch((err) => {
-                res.send(err);
+        Profile.findByIdAndUpdate({ _id: senderId }, {$push:{ notifications: { friendRequests }} }).then((user) => {
+            Profile.findByIdAndUpdate({_id: senderId}, {$push: {friends: acceptorName}}).then((user) => {
+                let senderName = user.username;
+                let friendRequests = {
+                    content: `you and ${senderName} are now friends`,
+                    isFriend: permit.acceptRequest
+                }
+                Profile.findByIdAndUpdate({ _id: acceptorId }, {$push:{ notifications: { friendRequests }}}).then((user) => {
+                    Profile.findByIdAndUpdate({ _id: acceptorId}, {$push: { friends: senderName }}).then((response) => {
+                        res.send(`request accepted`);
+                    }).catch((err) => {
+                        res.send(err);
+                })
+                });
             });
-        })
+        });
     }
 });
+
 
 //logout from the account
 router.delete('/logout', authenticateUser, (req, res) => {
