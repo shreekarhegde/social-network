@@ -41,37 +41,45 @@ router.post('/send_request/:id', validateID, authenticateUser, (req, res) => {
     //TODO- limiting request to one
     userId = req.locals.profile._id;
     let friendRequests = {
-        content:`you have a friend request from ${username}`};
-    Profile.findOneAndUpdate({ _id: id}, {$push:{notifications: { friendRequests }}}).then((user) =>{
-        Profile.findOneAndUpdate({ username: username }, { $push: { activity: `you sent a friend request to ${user.username}` } }).then((user) =>{
+        content: `you have a friend request from ${username}`
+    };
+    Profile.findOneAndUpdate({ _id: id }, { $push: { notifications: { friendRequests } } }).then((user) => {
+        Profile.findOneAndUpdate({ username: username }, { $push: { activity: `you sent a friend request to ${user.username}` } }).then((user) => {
             res.send(`request sent`);
         });
     }).catch((err) => {
         res.send(err);
     });
-    });
+});
 
 //accept_request
-router.post('/accept_request/:id', authenticateUser,(req, res) => {
+router.post('/accept_request/:id', authenticateUser, (req, res) => {
     let acceptorId = req.locals.profile._id;
+    let acceptorName = req.locals.profile.username;
     let senderId = req.params.id;
     let body = _.pick(req.body, ['acceptRequest']);
     let permit = new Profile(body);
+    
     let friendRequests = {
+        content: `you and ${acceptorName} are now friends`,
         isFriend: permit.acceptRequest
     }
-    if(permit.acceptRequest == true){
-        Profile.findOneAndUpdate({_id: acceptorId}, {notifications: {friendRequests}}).then((user) => {
-            let name = user.username;
-            Profile.findByIdAndUpdate({_id: senderId}, {friends: name}).then((user) => {
-                res.send(user);
+    if (permit.acceptRequest == true) {
+        Profile.findByIdAndUpdate({ _id: senderId }, { notifications: { friendRequests }},{$push:{ friends: acceptorName }}).then((user) => {
+            let senderName = user.username;
+            let friendRequests = {
+                content: `you and ${senderName} are now friends`,
+                isFriend: permit.acceptRequest
+            }
+            Profile.findByIdAndUpdate({ _id: acceptorId }, { notifications: { friendRequests } },{$push:{ friends: senderName }}).then((user) => {
+                res.send(`request accepted`);
             }).catch((err) => {
                 res.send(err);
             });
         })
     }
-    });
-    
+});
+
 //logout from the account
 router.delete('/logout', authenticateUser, (req, res) => {
     let profile = req.locals.profile;
