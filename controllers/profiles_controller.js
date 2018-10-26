@@ -67,25 +67,32 @@ router.post('/accept_request/:id', authenticateUser, (req, res) => {
     let senderId = req.params.id;
     let body = _.pick(req.body, ['acceptRequest']);
     let permit = new Profile(body);
-    
     let friendRequests = {
         content: `you and ${acceptorName} are now friends`,
         isFriend: permit.acceptRequest
     }
     if (permit.acceptRequest == true) {
         Profile.findByIdAndUpdate({ _id: senderId }, {$push:{ notifications: { friendRequests }} }).then((user) => {
-            Profile.findByIdAndUpdate({_id: senderId}, {$push: {friends: acceptorName}}).then((user) => {
+            let acceptor = {
+                name: acceptorName,
+                id: acceptorId
+            }
+                Profile.findByIdAndUpdate({ _id: senderId }, {$push:{ friends: acceptor } }).then((user) => {
                 let senderName = user.username;
                 let friendRequests = {
                     content: `you and ${senderName} are now friends`,
                     isFriend: permit.acceptRequest
                 }
                 Profile.findByIdAndUpdate({ _id: acceptorId }, {$push:{ notifications: { friendRequests }}}).then((user) => {
-                    Profile.findByIdAndUpdate({ _id: acceptorId}, {$push: { friends: senderName }}).then((response) => {
+                    let sender = {
+                        name: senderName,
+                        id: senderId
+                    }
+                    Profile.findByIdAndUpdate({ _id: acceptorId}, {$push: { friends: sender }}).then((response) => {
                         res.send(`request accepted`);
                     }).catch((err) => {
                         res.send(err);
-                });
+            });
                 });
             });
         });
