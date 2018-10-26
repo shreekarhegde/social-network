@@ -42,12 +42,11 @@ router.post('/create_account', (req, res) => {
     });
 });
 
-//add friend and make sure request is sent only once
+//add friend
 router.post('/send_request/:id', validateID, authenticateUser, (req, res) => {
     let id = req.params.id;
     let username = req.locals.profile.username;
-    //TODO- limiting request to one
-    userId = req.locals.profile._id;
+
     let friendRequests = {
         content: `you have a friend request from ${username}`
     };

@@ -42,7 +42,7 @@ const profileSchema = new Schema({
         type: String,
         minlength: 1
     },
-    friends: [ Object ],
+    friends: [],
     activity: [],
     groups: [],
     gender: {
