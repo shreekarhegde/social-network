@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { profileSchema } = require('../models/profile');
+const { postSchema } = require('../models/post');
 
 const Schema = mongoose.Schema;
 
@@ -19,7 +20,7 @@ const groupSchema = new Schema({
         type: Date,
         default: Date.now()
     },
-    posts: [String]
+    posts: [ postSchema ]
 });
 
 let Group = mongoose.model('Group', groupSchema);

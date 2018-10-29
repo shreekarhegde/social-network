@@ -4,6 +4,7 @@ const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const { groupSchema } = require('../models/group');
 const { Notification, notificationSchema } = require('../models/notification');
+const { postSchema } = require('../models/post');
 
 
 const Schema = mongoose.Schema;
@@ -61,7 +62,8 @@ const profileSchema = new Schema({
     acceptRequest:{
         type: Boolean,
         default: false
-    }
+    },
+    posts: [ postSchema ]
 });
 
 profileSchema.pre('save', function (next) {
