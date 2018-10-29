@@ -16,6 +16,19 @@ router.get('/posts', authenticateUser, (req,res) => {
     });
 });
 
+//add posts
+router.post('/whats_on_your_mind', authenticateUser, (req, res) => {
+    let id = req.locals.profile._id;
+    let body = _.pick(req.body, ['textArea', 'comments', 'postedAt', 'likes', 'shares']);
+    let post = new Post(body);
+    console.log(post);
+        Profile.findByIdAndUpdate({_id: id}, {$push: {posts: post }}).then((response) => {
+        res.send(response);
+    }).catch((err) => {
+        res.send(err);
+    });
+});
+
 module.exports = {
     postsController: router
 }

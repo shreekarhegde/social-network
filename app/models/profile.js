@@ -63,7 +63,7 @@ const profileSchema = new Schema({
         type: Boolean,
         default: false
     },
-    posts: [ ],
+    posts: [ postSchema ],
     groups: [ ]
 });
 

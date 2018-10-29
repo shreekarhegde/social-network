@@ -3,10 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
-    posts: [{
-        type: String,
-        minlength: 1
-    }],
+    textArea: [],
     likes: [{
         type: Number
     }],
@@ -16,10 +13,10 @@ const postSchema = new Schema({
     shares: [{
         type: Number
     }],
-    postedAt: [{
+    postedAt: {
         type: Date,
         default: Date.now()
-    }]
+    }
 });
 
 let Post = mongoose.model('Post', postSchema);
