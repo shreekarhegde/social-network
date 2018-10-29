@@ -4,7 +4,7 @@ const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const { groupSchema } = require('../models/group');
 const { Notification, notificationSchema } = require('../models/notification');
-const { postSchema } = require('../models/post');
+const { postSchema } = require('./post');
 
 
 const Schema = mongoose.Schema;
@@ -45,7 +45,7 @@ const profileSchema = new Schema({
     },
     friends: [],
     activity: [],
-    groups: [],
+    groups: [ groupSchema ],
     gender: {
         type: String,
         required: true
@@ -63,7 +63,8 @@ const profileSchema = new Schema({
         type: Boolean,
         default: false
     },
-    posts: [ postSchema ]
+    posts: [ ],
+    groups: [ ]
 });
 
 profileSchema.pre('save', function (next) {

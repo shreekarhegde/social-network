@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { profileSchema } = require('../models/profile');
-const { postSchema } = require('../models/post');
+const { postSchema } = require('./post');
 
 const Schema = mongoose.Schema;
 
@@ -26,5 +26,5 @@ const groupSchema = new Schema({
 let Group = mongoose.model('Group', groupSchema);
 
 module.exports = {
-    Group
+    Group, groupSchema
 }
