@@ -21,12 +21,26 @@ router.post('/whats_on_your_mind', authenticateUser, (req, res) => {
     let id = req.locals.profile._id;
     let body = _.pick(req.body, ['textArea', 'comments', 'postedAt', 'likes', 'shares']);
     let post = new Post(body);
-    console.log(post);
-        Profile.findByIdAndUpdate({_id: id}, {$push: {posts: post }}).then((response) => {
+    post.profile = id;
+    Profile.findByIdAndUpdate({_id: id}, {$push: {posts: post }}).then((response) => {
+        post.save().then((rep) => {
         res.send(response);
     }).catch((err) => {
         res.send(err);
     });
+});
+});
+
+//delete posts
+router.delete('/delete/:id', authenticateUser, (req, res) => {
+ let id = req.params.id;
+ let profile = req.locals.profile;
+ profile.posts.id(id).remove(); 
+ profile.save().then((account) => {
+     res.send('deleted the post');
+ }).catch((err) => {
+     res.send(err);
+ });
 });
 
 module.exports = {

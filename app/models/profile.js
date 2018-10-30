@@ -39,10 +39,6 @@ const profileSchema = new Schema({
             type: String
         }
     }],
-    posts: {
-        type: String,
-        minlength: 1
-    },
     friends: [],
     activity: [],
     groups: [ groupSchema ],
