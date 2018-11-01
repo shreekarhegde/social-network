@@ -4,6 +4,7 @@ const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const { groupSchema } = require('../models/group');
 const { Notification, notificationSchema } = require('../models/notification');
+const { Group } = require('../models/group');
 const { postSchema } = require('./post');
 
 
@@ -44,7 +45,7 @@ const profileSchema = new Schema({
         ref: 'Profile'
     }],
     activity: [],
-    groups: [ groupSchema ],
+    groups: [ ],
     gender: {
         type: String,
         required: true
