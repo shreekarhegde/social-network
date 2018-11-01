@@ -39,7 +39,10 @@ const profileSchema = new Schema({
             type: String
         }
     }],
-    friends: [],
+    friends: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Profile'
+    }],
     activity: [],
     groups: [ groupSchema ],
     gender: {
@@ -59,8 +62,7 @@ const profileSchema = new Schema({
         type: Boolean,
         default: false
     },
-    posts: [ postSchema ],
-    groups: [ ]
+    posts: [ postSchema ]
 });
 
 profileSchema.pre('save', function (next) {

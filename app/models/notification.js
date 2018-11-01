@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 const { Profile } = require('../models/profile');
 
 const notificationSchema = new Schema({
+    profile: {
+        type: Schema.Types.ObjectId,
+        ref: 'Profile' 
+    },
     friendRequests: [{
         content:{
             type: String
@@ -13,7 +17,9 @@ const notificationSchema = new Schema({
        }
        }
     ],
-     birthdays:[ String ],
+     birthdays:[ {
+         type: Date
+     }],
      tags: {
          type: String
      }

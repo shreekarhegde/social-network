@@ -7,15 +7,14 @@ const postSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Profile'
     },
-    textArea: [],
+    textArea: {
+        type: String
+    },
     likes: [{
         type: Number
     }],
     comments: [{
         type: String,
-    }],
-    shares: [{
-        type: Number
     }],
     postedAt: {
         type: Date,

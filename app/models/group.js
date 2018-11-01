@@ -11,7 +11,10 @@ const groupSchema = new Schema({
         minlength: 2,
         maxlength: 15
     },
-    profiles: [],
+    profiles: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Profile'
+    }],
     isPublic: {
         type: Boolean,
         default: true
